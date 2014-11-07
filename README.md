@@ -17,7 +17,8 @@ Some background information can be found here: [Puppet module to manage SmokePin
 Tested on Ubuntu 12.04 LTS
 
 ## Dependencies
-  - [puppet-concat](https://github.com/ripienaar/puppet-concat)
+  - [puppetlabs-concat](https://github.com/puppetlabs/puppet-concat)
+  - [puppetlabs-stdlib](https://github.com/puppetlabs/puppet-stdlib)
 
 ## Example
 
@@ -115,19 +116,26 @@ smokeping::target { 'GoogleCHIPv6':
     probe            => 'FPing6'
     slaves           => ['slave1'],
 }
+smokeping::target { 'GoogleCHCurl':
+    hierarchy_parent => 'GoogleCH',
+    hierarchy_level  => 3,
+    menu             => 'google.ch Curl',
+    host             => 'google.ch',
+    probe            => 'Curl',
+    options          => {
+      urlformat => 'http://%host%/',
+    }
+}
 ```
 
 ## License / Author
 
 The module is written by
 
-* Tobias Brunner <tobias.brunner@nine.ch>
+* Tobias Brunner <tobias@tobru.ch>
 
 Licensed under Apache License, Version 2.0, Copyright 2013 by Tobias Brunner
 
 ## Contibutors
 
-The following nice peoples have contributed to this puppet module:
-
-* Andreas Jaggi: @x-way
-* André Timmermann: @darktim
+See: [Github Contributors](https://github.com/tobru/puppet-smokeping/graphs/contributors)

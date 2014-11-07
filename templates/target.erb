@@ -12,7 +12,7 @@ title = <%= menu %>
 <% if host != '' then -%>
 host = <%= host %>
 <% end -%>
-<% if alerts != [] then -%>
+<% if alerts != false then -%>
 alerts = <%= alerts.join(',') %>
 <% end -%>
 <% if nomasterpoll then -%>
@@ -24,4 +24,10 @@ slaves = <%= slaves.join(' ') %>
 <% if remark != '' then -%>
 remark = <%= remark %>
 <% end -%>
+<% if options then -%>
+<%- options.sort.each do |key,value| -%>
+<%= key %> = <%= value %>
+<%- end -%>
+<% end -%>
+
 

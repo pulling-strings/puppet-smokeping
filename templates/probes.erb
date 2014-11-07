@@ -3,7 +3,9 @@
 # THIS FILE IS MANAGED BY PUPPET
 
 <% probes.each do |probe| -%>
-+ <%= probe['name'] %>
-binary = <%= probe['binary'] %>
++ <%= probe.delete('name') %>
+<% probe.each_pair do |k,v| -%>
+<%= k %> = <%= v %>
+<% end -%>
 
 <% end -%>
