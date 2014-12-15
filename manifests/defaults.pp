@@ -18,6 +18,7 @@ class smokeping::defaults {
   smokeping::target { 'World':
     menu      => 'World',
     pagetitle => 'Connection to the World',
+    alerts    => []
   }
 
   smokeping::target { 'Google':
@@ -25,6 +26,7 @@ class smokeping::defaults {
     hierarchy_level  => 2,
     menu             => 'google.com',
     pagetitle        => 'Google',
+    alerts           => []
   }
 
   smokeping::target { 'Google-fping':
@@ -32,6 +34,7 @@ class smokeping::defaults {
     hierarchy_level  => 3,
     menu             => 'google.com ping',
     host             => 'google.com',
+    alerts           => []
   }
 
   smokeping::target { 'Google-DNS':
@@ -40,5 +43,6 @@ class smokeping::defaults {
     probe            => 'DNS',
     menu             => 'google.com dns',
     host             => '8.8.8.8',
+    alerts           => []
   }
 }

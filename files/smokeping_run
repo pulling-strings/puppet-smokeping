@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/sbin/smokeping --config=/etc/smokeping/config --nodaemon 
