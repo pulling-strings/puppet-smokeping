@@ -171,7 +171,7 @@ class smokeping(
     class{'smokeping::service': } ->
     Class['smokeping']
 
-    if($::virtul == 'docker'){
+    if($::virtual == 'docker'){
       include smokeping::lighttpd
     }
 }
