@@ -10,20 +10,20 @@ class smokeping::runit {
 
     file { '/etc/service/smokeping/run':
       ensure => file,
-      mode  => 'u+x',
+      mode   => 'u+x',
       source => 'puppet:///modules/smokeping/smokeping_run',
       owner  => root,
       group  => root,
     }
 
-    file{'/etc/service/smokeping-cgi':
+    file{'/etc/service/lighttpd':
       ensure => directory,
     } ->
 
-    file { '/etc/service/smokeping-cgi/run':
+    file { '/etc/service/lighttpd/run':
       ensure => file,
-      mode  => 'u+x',
-      source => 'puppet:///modules/smokeping/fastcgi_run',
+      mode   => 'u+x',
+      source => 'puppet:///modules/smokeping/lighttpd_run',
       owner  => root,
       group  => root,
     }
