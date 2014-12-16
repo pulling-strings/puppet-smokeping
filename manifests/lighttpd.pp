@@ -1,7 +1,5 @@
 # Setting up lighttpd for docker
 class smokeping::lighttpd {
-  $enable_cgi = 'lighttpd-enable-mod cgi'
-  $enable_fastcgi = 'lighttpd-enable-mod fastcgi'
 
   package{'lighttpd':
     ensure  => present
@@ -15,34 +13,38 @@ class smokeping::lighttpd {
     group  => root,
   } ->
 
-  exec{'enabling lighttpd modules':
-    command => "${enable_cgi} && ${enable_fastcgi}",
+  exec{'enable lighttpd cgi module':
+    command => 'lighttpd-enable-mod cgi',
     user    => 'root',
-    path    => ['/usr/bin','/bin',]
+    path    => '/usr/sbin/'
+  } ->
+
+  exec{'enable lighttpd fastcgi module':
+    command => 'lighttpd-enable-mod fastcgi',
+    user    => 'root',
+    path    => '/usr/sbin/'
   } ->
 
   file{'/var/www/smokeping':
     ensure  => link,
-    target  => '/usr/share/smokeping/www',
+    target  => '/usr/share/smokeping/www/',
     require => Package['smokeping']
   } ->
 
-  file{'/var/www/':
-    ensure => link,
-    target => '/usr/lib/cgi-bin'
-  } ->
-
-  file{'/var/www/smokeping':
+  file{'/var/www/smokeping/smokeping.cgi':
     ensure => link,
     target => '/usr/lib/cgi-bin/smokeping.cgi'
+  } ->
+
+  file{'/var/www/cgi-bin':
+    ensure => link,
+    target => '/usr/lib/cgi-bin'
   } ->
 
   exec{'chmod stderr stdout':
     command => 'chmod 0777 /dev/stderr /dev/stdout',
     user    => 'root',
-    path    => ['/usr/bin','/bin',]
+    path    => '/bin',
   }
-  
-
 
 }
