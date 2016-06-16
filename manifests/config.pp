@@ -32,6 +32,7 @@ class smokeping::config {
     $default_probe  = $smokeping::default_probe
     $cgi_remark_top = $smokeping::cgi_remark_top
     $cgi_title_top  = $smokeping::cgi_title_top
+    $targets        = $smokeping::targets
 
     # Pathnames
     $path_sendmail  = $smokeping::path_sendmail
@@ -48,26 +49,69 @@ class smokeping::config {
         mode  => '0644',
     }
 
+    file { '/etc/smokeping/config.d':
+      ensure  => directory,
+      recurse => true,
+      purge   => true,
+      force   => true,
+    } ->
+
     file {
-        '/etc/default/smokeping':
-            content => template('smokeping/defaults.erb');
-        '/etc/smokeping/config.d/General':
-            content => template('smokeping/general.erb');
-        '/etc/smokeping/config.d/Probes':
-            content => template('smokeping/probes.erb');
+        '/etc/smokeping/config':
+            content => template('smokeping/config.erb');
         '/etc/smokeping/config.d/Alerts':
             content => template('smokeping/alerts.erb');
+        '/etc/smokeping/config.d/Database':
+            content => template('smokeping/database.erb');
+        '/etc/smokeping/config.d/General':
+            content => template('smokeping/general.erb');
         '/etc/smokeping/config.d/pathnames':
             content => template('smokeping/pathnames.erb');
+        '/etc/smokeping/config.d/Presentation':
+            content => template('smokeping/presentation.erb');
+        '/etc/smokeping/config.d/Probes':
+            content => template('smokeping/probes.erb');
+    }
+
+    ## Platform Specific
+    if $::osfamily == 'Debian' or $::operatingsystem == 'Ubuntu' {
+      # Defaults file allows smokeping to be launched in different modes (eg slave vs master)
+      file { '/etc/default/smokeping':
+        content => template('smokeping/defaults.erb');
+      }
+    } else {
+      # TODO: Add master/slave support to non-Debian distros
+      #
+      # We don't yet support modes other than standalone on other platforms
+      # such as RHEL - to offer it, we need to start replacing the systemd
+      # service file loaded by the package manager with a custom one that
+      # has the alternative parameters set, like in the default file above
+      # for Debian/Ubuntu systems.
+
+      if ($mode != 'standalone') {
+        fail('Currently master/slave mode not supported for this OS family')
+      }
     }
 
     ## mode specific
     case $mode {
         ## Slave configuration
         'slave': {
-            if $smokeping::slave_display_name == '' { $display_name = $::hostname }
-            if $smokeping::slave_color == '' { $slave_color = sprintf('%06d', fqdn_rand('999999')) }
-            smokeping::slave { $::hostname:
+            # Check if slave_display_name is unset.
+            # --> use FQDN if not set.
+            if $smokeping::slave_display_name == '' {
+                $display_name = $::fqdn
+            } else {
+                $display_name = $smokeping::slave_display_name
+            }
+
+            if $smokeping::slave_color == '' { 
+               $slave_color = sprintf('%06d', fqdn_rand('999999')) 
+            } else {
+               $slave_color = $smokeping::slave_color
+            }
+
+            smokeping::slave { $::fqdn:
                 location     => $smokeping::slave_location,
                 display_name => $display_name,
                 color        => $slave_color,
@@ -103,7 +147,7 @@ class smokeping::config {
 
                 # collect shared secrets from slaves
                 concat { $smokeping::slave_secrets:
-                    owner => smokeping,
+                    owner => $daemon_user,
                     group => $webserver_group,
                     mode  => '0640',
                 }
@@ -113,7 +157,7 @@ class smokeping::config {
                 file {
                     $smokeping::slave_secrets:
                         ensure => present,
-                        owner  => smokeping,
+                        owner  => $daemon_user,
                         group  => $webserver_group,
                         mode   => '0640';
                 }
@@ -136,6 +180,7 @@ class smokeping::config {
                 order   => 10,
                 content => template('smokeping/targets-header.erb'),
             }
+            create_resources("smokeping::target", $targets, {})
         }
         default: { fail("mode ${mode} unknown") }
     }

@@ -62,10 +62,10 @@
 #
 # [*alerts*]
 #   Alert definitions as Array of Hashes (Default:
-#   { name    => 'someloss',
-#     type    => 'loss',
-#     pattern => '>0%,*12*,>0%,*12*,>0%',
-#     comment => 'loss 3 times in a row' } )
+#   { name          => 'someloss',
+#     alert_type    => 'loss',
+#     pattern       => '>0%,*12*,>0%,*12*,>0%',
+#     comment       => 'loss 3 times in a row' } )
 #
 # [*cgi_remark_top*]
 #   Remark on Website (Default: Welcome to the SmokePing website of xxx Company. Here you will learn all about the latency of our network.)
@@ -75,6 +75,9 @@
 #
 # [*targets_dir*]
 #   Where to save target definitions (Default: /etc/smokeping/config.d/targets.d)
+#
+# [*targets*]
+#   Target definitions as a Hash of Smokeping::Target (Default: {})
 #
 # [*daemon_user*]
 #   User to run SmokePing (Default: smokeping)
@@ -136,23 +139,24 @@ class smokeping(
     $webserver_group    = 'www-data',
     $master_name        = 'default',
     $owner              = 'Peter Random',
-    $contact            = 'some@address.nowhere',
+    $contact            = 'root@localhost',
     $mailhost           = 'my.mail.host',
     $cgiurl             = 'http://some.url/smokeping.cgi',
     $syslogfacility     = 'local0',
     $syslogpriority     = 'info',
     $probes             = [ { name => 'FPing', binary => '/usr/bin/fping', step => '300' } ],
     $default_probe      = 'FPing',
-    $alerts_to          = 'alertee@address.somewhere',
-    $alerts_from        = 'smokealert@company.xy',
+    $alerts_to          = 'root@localhost',
+    $alerts_from        = 'root@localhost',
     $alerts             = [ {
-        name    => 'someloss',
-        type    => 'loss',
-        pattern => '>0%,*12*,>0%,*12*,>0%',
-        comment => 'loss 3 times in a row' } ],
+        name       => 'someloss',
+        alert_type => 'loss',
+        pattern    => '>0%,*12*,>0%,*12*,>0%',
+        comment    => 'loss 3 times in a row' } ],
     $cgi_remark_top     = 'Welcome to the SmokePing website of xxx Company. Here you will learn all about the latency of our network.',
     $cgi_title_top      = 'Network Latency Grapher',
     $targets_dir        = '/etc/smokeping/config.d/targets.d',
+    $targets            = {},
     $daemon_user        = 'smokeping',
     $daemon_group       = 'smokeping',
     $path_sendmail      = '/usr/sbin/sendmail',

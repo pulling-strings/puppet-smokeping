@@ -1,12 +1,12 @@
 *** Alerts ***
-to=<%= alerts_to %>
-from=<%= alerts_from %>
+to=<%= @alerts_to %>
+from=<%= @alerts_from %>
 
 # THIS FILE IS MANAGED BY PUPPET
 
-<% alerts.each do |alert| -%>
+<% @alerts.each do |alert| -%>
 + <%= alert['name'] %>
-type = <%= alert['type'] %>
+type = <%= alert['alert_type'] %>
 pattern = <%= alert['pattern'] %>
 comment = <%= alert['comment'] %>
 

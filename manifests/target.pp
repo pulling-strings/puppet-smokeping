@@ -36,13 +36,13 @@ define smokeping::target (
     $hierarchy_parent = '',
     $probe = '',
     $host = '',
-    $alerts = false,
+    $alerts = [],
     $slaves = [],
     $nomasterpoll = false,
     $remark = '',
     $options = {},
 ) {
-    validate_re( $name, '^[^[:space:]]+$', 'Target name cannot contain whitespace.' )
+    validate_re( $name, '^[-_0-9a-zA-Z]+$', 'There is a very limited syntax permitted for target names (/[-_0-9a-zA-Z]+/)')
     validate_string( $pagetitle )
     validate_string( $menu )
     validate_string( $hierarchy_parent )

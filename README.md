@@ -14,7 +14,16 @@ Some background information can be found here: [Puppet module to manage SmokePin
 * Uses exported resources to configure Slaves on the Master (tag: smokeping-slave)
 * Automatically generates a shared secret for Master/Slave configuration (tag: smokeping-slave-secret)
 
-Tested on Ubuntu 12.04 LTS
+
+## Supported Platforms
+
+Fully supported:
+* Ubuntu (Tested on 12.04, 14.04)
+
+Standalone Only (no master/slave support yet):
+* Fedora 22+
+* CentOS 7+ (Note: requires third party repository to provide smokeping package).
+
 
 ## Dependencies
   - [puppetlabs-concat](https://github.com/puppetlabs/puppet-concat)
@@ -134,7 +143,7 @@ The module is written by
 
 * Tobias Brunner <tobias@tobru.ch>
 
-Licensed under Apache License, Version 2.0, Copyright 2013 by Tobias Brunner
+Licensed under Apache License, Version 2.0, Copyright 2015 by Tobias Brunner
 
 ## Contibutors
 
