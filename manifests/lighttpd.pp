@@ -47,4 +47,12 @@ class smokeping::lighttpd {
     path    => '/bin',
   }
 
+  file_line { 'fix root':
+    ensure  => present,
+    path    => '/etc/lighttpd/lighttpd.conf',
+    line    => 'server.document-root = "/var/www/"',
+    match   => '^server.document-root',
+    require => Package['lighttpd']
+  }
+
 }
